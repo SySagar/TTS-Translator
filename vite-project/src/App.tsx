@@ -22,13 +22,25 @@ function App() {
 
   const playAudio = () => {
     const audio = new Audio(`data:audio/mp3;base64,${audioFile}`);
-    if (buttonState) audio.play();
-    if (!buttonState) audio.pause();
-
     setButtonState(!buttonState);
+
+    if (!buttonState){
+      audio.play();
+      } 
+      else
+      {audio.pause();
+      }
+   
   };
+  
+  // useEffect(() => {
+
+  // }, [audio, buttonState]);
 
   const translateText = async () => {
+    
+    setPlayButton(false);
+    setButtonState(true);
     const data = {
       q: text,
       source: "es",
@@ -51,7 +63,7 @@ function App() {
   const handleAudio = async (state: string) => {
     console.log(translatedText);
     await axios
-      .post("http://localhost:5000/speech", {
+      .post("https://tts-translator-backend.onrender.com/speech", {
         text: state,
       })
       .then((res) => {
