@@ -24,7 +24,7 @@ function App() {
     const audio = new Audio(`data:audio/mp3;base64,${audioFile}`);
     setButtonState(!buttonState);
 
-    if (!buttonState){
+    if (buttonState){
       audio.play();
       } 
       else
