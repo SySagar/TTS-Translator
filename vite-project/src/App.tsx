@@ -96,7 +96,7 @@ try {
   const handleAudio = async (state: string) => {
     console.log(translatedText);
     await axios
-      .post("http://localhost:5000/speech", {
+      .post("https://tts-translator-backend.onrender.com/speech", {
         text: state,
       })
       .then((res) => {
