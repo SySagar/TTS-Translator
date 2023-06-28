@@ -9,7 +9,7 @@ const app = express();
 dotenv.config();
 app.use(express.json());
 var allowedOrigins = ['http://localhost:5173',
-                      'https://tts-translator.vercel.app/'];
+                      'https://tts-translator.vercel.app'];
 app.use(cors({
   origin: function(origin, callback){
     if(!origin) return callback(null, true);
@@ -23,7 +23,7 @@ app.use(cors({
 }));
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("server is up and running");
 });
 
 
