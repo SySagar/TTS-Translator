@@ -7,6 +7,8 @@ import { useState } from "react";
 import PauseCircleIcon from "@mui/icons-material/PauseCircle";
 import PlayCircleFilledWhiteIcon from "@mui/icons-material/PlayCircleFilledWhite";
 import "./App.css";
+import { toast } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const [text, setText] = useState<string>("");
@@ -38,32 +40,62 @@ function App() {
   // }, [audio, buttonState]);
 
   const translateText = async () => {
-    
-    setPlayButton(false);
-    setButtonState(true);
-    const data = {
-      q: text,
-      source: "es",
-      target: "hi",
-    };
+
+    if(text === ""){
+      toast.error("Please enter some text")
+      return
+    }
+    else
+    {
+
+      setPlayButton(false);
+      setButtonState(true);
+
+      const encodedParams = new URLSearchParams();
+encodedParams.set('q', text);
+encodedParams.set('target', 'hi');
+encodedParams.set('source', 'en');
+
+const options = {
+  method: 'POST',
+  url: 'https://google-translate1.p.rapidapi.com/language/translate/v2',
+  headers: {
+    'content-type': 'application/x-www-form-urlencoded',
+    'Accept-Encoding': 'application/gzip',
+    'X-RapidAPI-Key': 'c7cd4fe1aamsh83fb69188cc8391p115f11jsn416f0cd5025c',
+    'X-RapidAPI-Host': 'google-translate1.p.rapidapi.com'
+  },
+  data: encodedParams,
+};
+
+try {
+	await axios.request(options).then(async(response)=>{
+
+    setTranslatedText(response.data.data.translations[0].translatedText);
+    setTranslatedText((state) => {
+      console.log(state);
+      handleAudio(state);
+      return state;
+    });
+  })
+} catch (error) {
+	console.error(error);
+}
 
     setLoading(true);
-    await axios
-      .post(`https://libretranslate.de/translate`, data)
-      .then(async (response) => {
-        setTranslatedText(response.data.translatedText);
-        setTranslatedText((state) => {
-          console.log(state);
-          handleAudio(state);
-          return state;
-        });
-      });
-  };
+    // await axios
+    //   .post(`https://libretranslate.de/translate`, data)
+    //   .then(async (response) => {
+       
+    //   });
+
+    }
+    };
 
   const handleAudio = async (state: string) => {
     console.log(translatedText);
     await axios
-      .post("https://tts-translator-backend.onrender.com/speech", {
+      .post("http://localhost:5000/speech", {
         text: state,
       })
       .then((res) => {
@@ -86,6 +118,7 @@ function App() {
           background: "#c0c0c0",
         }}
       >
+        <Toaster position="top-center"></Toaster>
         <Stack
           border={2}
           borderRadius="8px"
@@ -103,6 +136,7 @@ function App() {
             label="Enter here"
             onChange={handleTextChange}
             id="fullWidth"
+            required
           />
 
           <Button
