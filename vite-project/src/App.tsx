@@ -42,6 +42,7 @@ function App() {
   const translateText = async () => {
 
     if(text === ""){
+      setPlayButton(false);
       toast.error("Please enter some text")
       return
     }
@@ -62,7 +63,7 @@ const options = {
   headers: {
     'content-type': 'application/x-www-form-urlencoded',
     'Accept-Encoding': 'application/gzip',
-    'X-RapidAPI-Key': 'c7cd4fe1aamsh83fb69188cc8391p115f11jsn416f0cd5025c',
+    'X-RapidAPI-Key': import.meta.env.VITE_RAPID_API_KEY,
     'X-RapidAPI-Host': 'google-translate1.p.rapidapi.com'
   },
   data: encodedParams,
